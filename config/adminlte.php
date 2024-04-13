@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 3',
+    'title' => 'Imóveis',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -322,10 +322,10 @@ return [
             'label' => 4,
             'label_color' => 'success',
         ],
-        ['header' => 'account_settings'],
+        ['header' => 'Usuários'],
         [
-            'text' => 'profile',
-            'url' => 'admin/settings',
+            'text' => 'Início',
+            'route' => 'users.index',
             'icon' => 'fas fa-fw fa-user',
         ],
         [
