@@ -36,6 +36,7 @@
                                 <th>ID</th>
                                 <th>NOME</th>
                                 <th>EMAIL</th>
+                                <th>FUNÇÕES</th>
                                 <th>CRIADO</th>
                                 <th>ATUALIZADO</th>
                                 <th><a href="{{ route('users.create') }}" class="btn btn-block btn-primary">Novo
@@ -48,6 +49,15 @@
                                     <td>{{ $user->id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
+                                    <td>
+                                        <ol>
+                                            @forelse($user->roles as $role)
+                                                <li>{{ $role->name }}</li>
+                                            @empty
+                                                <li>Usuário sem função</li>
+                                            @endforelse
+                                        </ol>
+                                    </td>
                                     <td>{{ $user->created_at }}</td>
                                     <td>{{ $user->updated_at }}</td>
                                     <td style="display: flex;">
@@ -67,13 +77,28 @@
                                     <td colspan="5">Ainda não há Usuários Cadastrados.</td>
                                 </tr>
                             @endforelse
-
                         </tbody>
                     </table>
+                    <div class="card-footer clearfix">
+                        <ul class="pagination pagination-md m-0">
+                            <li class="page-item @if (!$users->previousPageUrl()) disabled @endif">
+                                <a class="page-link" href="{{ $users->previousPageUrl() }}">«</a>
+                            </li>
+                            @foreach ($users as $page => $user)
+                                @if ($page >= 1 && $page <= $users->lastPage())
+                                    <!-- Verifica se a página está dentro do intervalo de páginas disponíveis -->
+                                    <li class="page-item {{ $page == $users->currentPage() ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $users->url($page) }}">{{ $page }}</a>
+                                    </li>
+                                @endif
+                            @endforeach
+                            <li class="page-item @if (!$users->nextPageUrl()) disabled @endif">
+                                <a class="page-link" href="{{ $users->nextPageUrl() }}">»</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 @stop
