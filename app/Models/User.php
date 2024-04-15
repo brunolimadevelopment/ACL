@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Permission;
 use App\Models\Role;
 
 class User extends Authenticatable
@@ -51,5 +52,25 @@ class User extends Authenticatable
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    // metódos que verificam permissions
+    public function hasPermission(Permission $permission)
+    {
+        return $this->hasAnyRoles($permission->roles);
+    }
+
+    public function hasAnyRoles($roles)
+    {
+
+        if(is_array($roles) || is_object($roles)) {
+            foreach($roles as $role) {
+
+                // Eintersect é usado para encontrar a interseção entre conjuntos de elementos, ajudando a determinar quais elementos são comuns a ambos os conjuntos.
+                return !! $roles->intersect($this->roles)->count();
+            }
+        }
+
+        return $this->roles->contains('name', $roles);
     }
 }

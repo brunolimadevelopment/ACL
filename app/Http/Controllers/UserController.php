@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -14,12 +15,24 @@ class UserController extends Controller
      */
     public function index()
     {
-        //$users = User::all();
-        $users = User::paginate(10);
 
-        $user = User::find(1);
-        //dd($user->roles->count());
-        return view('users.index', compact('users'));
+        if(Gate::allows('users.index')) {
+            //dd('tenho autorizacao');
+
+            //$users = User::all();
+            $users = User::paginate(10);
+
+            //$user = User::find(1);
+            //dd($user->roles->count());
+            return view('users.index', compact('users'));
+
+        } else {
+            return redirect()->back();
+            abort(403);
+            // sdd('não tem autorização');
+        }
+        //$this->authorize('users.index');
+
     }
 
     /**
@@ -27,6 +40,15 @@ class UserController extends Controller
      */
     public function create()
     {
+
+        if(Gate::allows('users.create')) {
+            //dd('tenho autorizacao');
+        } else {
+            abort(403);
+            //return redirect()->back();
+            //dd('não tem autorização');
+        }
+
         return view('users.create');
     }
 
